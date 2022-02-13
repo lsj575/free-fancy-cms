@@ -1,5 +1,6 @@
 # free-fancy-cms
-
+Campus Community——Free Fancy's Background Management System
+校园社区——暇思的后台管理系统
 ## Project setup
 ```
 npm install
