@@ -8,11 +8,16 @@ import {
   accountLoginRequest,
   getCaptcha,
   requestUserInfoById,
-  requestUserMenusByUserId
+  requestUserMenusByUserId,
+  refreshToken
 } from '@/service/login/login'
 import { Account } from '@/service/login/types'
 import localCache from '@/utils/cache'
 import { mapMenusToRoutes } from '@/utils/map-menus'
+
+// 定时任务：每隔一段时间刷新token
+// 为了保证后台的安全性
+let refreshTokenTimer: NodeJS.Timer
 
 const loginModule: Module<LoginState, RootState> = {
   namespaced: true,
@@ -65,8 +70,35 @@ const loginModule: Module<LoginState, RootState> = {
       commit('changeUserMenus', userMenus)
       localCache.setCache('userMenus', userMenus)
 
+      // 4. 删除更新token的定时器
+      refreshTokenTimer = setInterval(async () => {
+        const refreshTokenResult = await refreshToken()
+        console.log(refreshTokenResult.data)
+      }, 600)
+
+      setTimeout(() => clearInterval(refreshTokenTimer), 1000)
+
       // 4. 跳转到首页
       router.push('/main')
+    },
+    accountLogoutAction({ commit }) {
+      // 1. 删除token
+      commit('changeToken', '')
+      localCache.removeCache('token')
+
+      // 2. 删除用户信息
+      commit('changeUserInfo', {})
+      localCache.removeCache('userInfo')
+
+      // 3. 删除用户菜单
+      commit('changeUserMenus', [])
+      localCache.removeCache('userMenus')
+
+      // 4. 删除更新token的timer
+      clearInterval(refreshTokenTimer)
+
+      // 4. 跳转到登录页面
+      router.push('/login')
     },
     loadLocalLoginInfo({ commit }) {
       const token = localCache.getCache('token')
