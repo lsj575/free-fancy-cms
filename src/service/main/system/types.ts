@@ -1,4 +1,4 @@
 export interface DataListType {
-  totalCount: number
-  list: any[]
+  total: number
+  records: any[]
 }

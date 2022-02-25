@@ -1,10 +1,14 @@
 import fancyRequest from '@/service'
 import { FancyDataReponseType } from '@/service/request/type'
 import { DataListType } from './types'
+import qs from 'qs'
 
 export function getDataList(url: string, queryInfo: any) {
-  return fancyRequest.post<FancyDataReponseType<DataListType>>({
+  return fancyRequest.get<FancyDataReponseType<DataListType>>({
     url: url,
-    data: queryInfo
+    params: queryInfo,
+    paramsSerializer: function (params) {
+      return qs.stringify(params, { arrayFormat: 'repeat' })
+    }
   })
 }
