@@ -40,7 +40,7 @@ router.beforeEach((to) => {
   }
 
   if (to.path === '/login' && token) {
-    return firstMenu.url
+    return firstMenu.component
   }
 
   if (to.path === '/main') {

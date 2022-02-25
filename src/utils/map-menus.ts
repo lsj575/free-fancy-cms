@@ -21,10 +21,9 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
     for (const menu of menus) {
       if (menu.menuType === 'C') {
         const route = allRoutes.find((route) => {
-          return route.path === '/main/' + menu.component
+          return route.path === menu.component
         })
         if (route) {
-          menu.component = '/main/' + menu.component
           routes.push(route)
         }
         if (!firstMenu) {
@@ -54,7 +53,6 @@ export function mapPathToMenu(
 ): any {
   let userMenu: any = null
   for (const menu of userMenus) {
-    console.log(currentPath, menu)
     if (menu.menuType === 'M') {
       const res = mapPathToMenu(menu.children ?? [], currentPath)
       if (res) {
