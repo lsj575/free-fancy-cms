@@ -7,7 +7,7 @@ import { getDataList } from '@/service/main/system/system'
 import { upFirstChar } from '@/utils/tools'
 
 const pageMap = {
-  user: '/user/list'
+  user: '/sys/user/list'
 }
 
 const systemModule: Module<SystemState, RootState> = {
@@ -29,7 +29,12 @@ const systemModule: Module<SystemState, RootState> = {
   getters: {
     pageListData(state) {
       return (pageName: string) => {
-        return state[`${pageName}`]
+        return state[`${pageName}List`]
+      }
+    },
+    pageCountData(state) {
+      return (pageName: string) => {
+        return state[`${pageName}Count`]
       }
     }
   },
@@ -39,9 +44,9 @@ const systemModule: Module<SystemState, RootState> = {
       const pageUrl = pageMap[pageName]
 
       const dataRes = await getDataList(pageUrl, payload.queryInfo)
-      const { list, totalCount } = dataRes.data
-      commit(`change${upFirstChar(pageName)}List`, list)
-      commit(`change${upFirstChar(pageName)}Count`, totalCount)
+      const { records, total } = dataRes.data
+      commit(`change${upFirstChar(pageName)}List`, records)
+      commit(`change${upFirstChar(pageName)}Count`, total)
     }
   }
 }
