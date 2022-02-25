@@ -45,7 +45,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref, reactive, watch } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { FancyFormItem } from './types'
 export default defineComponent({
   props: {
