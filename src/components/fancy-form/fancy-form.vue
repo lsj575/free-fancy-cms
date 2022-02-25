@@ -9,7 +9,7 @@
                 <el-input
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
-                  v-model="reactiveFormData[`${item.field}`]"
+                  v-model="formData[`${item.field}`]"
                 ></el-input>
               </template>
               <template v-if="item.type === 'select'">
@@ -17,7 +17,7 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   style="width: 100%"
-                  v-model="reactiveFormData[`${item.field}`]"
+                  v-model="formData[`${item.field}`]"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -31,7 +31,7 @@
                 <el-date-picker
                   v-bind="item.otherOptions"
                   style="width: 100%"
-                  v-model="reactiveFormData[`${item.field}`]"
+                  v-model="formData[`${item.field}`]"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -45,7 +45,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, reactive, watch } from 'vue'
+import { defineComponent, PropType, ref, reactive, watch } from 'vue'
 import { FancyFormItem } from './types'
 export default defineComponent({
   props: {
@@ -78,13 +78,7 @@ export default defineComponent({
   },
   emits: ['updateFormData'],
   setup(props, { emit }) {
-    const reactiveFormData = reactive({ ...props.formData })
-
-    watch(reactiveFormData, (newValue) => emit('updateFormData', newValue), { deep: true })
-
-    return {
-      reactiveFormData
-    }
+    watch(props.formData, (newValue) => emit('updateFormData', newValue), { deep: true })
   }
 })
 </script>

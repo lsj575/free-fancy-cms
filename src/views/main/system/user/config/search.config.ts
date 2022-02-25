@@ -31,7 +31,7 @@ export const searchFormConfig: FancyFormType = {
       otherOptions: {
         startPlaceholder: '开始时间',
         endPlaceholder: '结束时间',
-        type: 'datarange'
+        type: 'datetimerange'
       }
     }
   ]

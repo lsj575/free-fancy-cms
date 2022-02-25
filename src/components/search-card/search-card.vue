@@ -34,15 +34,14 @@ export default defineComponent({
     console.log(formOriginData)
     const updateFormData = (newValue: FormData) => {
       for (const key in newValue) {
-        formData[key] = newValue[key]
+        formData[`${key}`] = newValue[key]
       }
     }
 
     const handleReset = () => {
-      for (const item of formItems) {
-        formData[item.field] = ''
+      for (const key in formOriginData) {
+        formData[`${key}`] = ''
       }
-      console.log(formData)
     }
 
     return {
