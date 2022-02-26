@@ -4,8 +4,9 @@ import { FancyDataReponseType } from '../request/type'
 import qs from 'qs'
 
 enum LoginApi {
-  GetCaptcha = '/captcha',
-  AccountLogin = '/login',
+  GetCaptcha = '/public/captcha',
+  AccountLogin = '/public/login',
+  RefreshToken = '/public/refreshToken',
   LoginUserInfo = '/sys/user/',
   UserMenus = '/sys/user/menuTree/'
 }
@@ -26,6 +27,12 @@ function accountLoginRequest(account: Account) {
   })
 }
 
+function refreshToken() {
+  return fancyRequest.get<FancyDataReponseType<CaptchaDataType>>({
+    url: LoginApi.RefreshToken
+  })
+}
+
 function requestUserInfoById(id: number) {
   return fancyRequest.get<FancyDataReponseType<UserInfoType>>({
     url: LoginApi.LoginUserInfo + id
@@ -38,4 +45,10 @@ function requestUserMenusByUserId(id: number) {
   })
 }
 
-export { getCaptcha, accountLoginRequest, requestUserInfoById, requestUserMenusByUserId }
+export {
+  getCaptcha,
+  accountLoginRequest,
+  requestUserInfoById,
+  requestUserMenusByUserId,
+  refreshToken
+}
