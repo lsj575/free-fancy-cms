@@ -4,6 +4,10 @@ interface Account {
   captcha: string
 }
 
+interface RefreshTokenDataType {
+  token: string
+}
+
 interface CaptchaDataType {
   ctoken: string
   captchaImageEncode: string
@@ -31,4 +35,4 @@ interface UserInfoType {
   role: userRole
 }
 
-export { Account, CaptchaDataType, LoginResponseDataType, UserInfoType }
+export { Account, CaptchaDataType, LoginResponseDataType, UserInfoType, RefreshTokenDataType }

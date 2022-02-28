@@ -1,5 +1,11 @@
 import fancyRequest from '../index'
-import { Account, CaptchaDataType, LoginResponseDataType, UserInfoType } from './types'
+import {
+  Account,
+  CaptchaDataType,
+  LoginResponseDataType,
+  UserInfoType,
+  RefreshTokenDataType
+} from './types'
 import { FancyDataReponseType } from '../request/type'
 import qs from 'qs'
 
@@ -28,7 +34,7 @@ function accountLoginRequest(account: Account) {
 }
 
 function refreshToken() {
-  return fancyRequest.get<FancyDataReponseType<CaptchaDataType>>({
+  return fancyRequest.get<FancyDataReponseType<RefreshTokenDataType>>({
     url: LoginApi.RefreshToken
   })
 }
