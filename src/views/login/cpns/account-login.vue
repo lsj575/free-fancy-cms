@@ -49,7 +49,7 @@ export default defineComponent({
 
     const captchaHandler = async () => {
       const captchaData = await getCaptcha()
-      cToken.value = captchaData.data.ctoken
+      cToken.value = captchaData.data.cToken
       captchaImg.value = captchaData.data.captchaImageEncode
     }
     onMounted(async () => await captchaHandler())

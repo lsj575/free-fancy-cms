@@ -9,7 +9,7 @@ interface RefreshTokenDataType {
 }
 
 interface CaptchaDataType {
-  ctoken: string
+  cToken: string
   captchaImageEncode: string
 }
 
