@@ -70,14 +70,6 @@ const loginModule: Module<LoginState, RootState> = {
       commit('changeUserMenus', userMenus)
       localCache.setCache('userMenus', userMenus)
 
-      // 4. 添加更新token的定时器
-      refreshTokenTimer = setInterval(async () => {
-        const refreshTokenResult = await refreshToken()
-        const { token } = refreshTokenResult.data
-        commit('changeToken', token)
-        localCache.setCache('token', token)
-      }, 1000 * 60 * 25)
-
       // 4. 跳转到首页
       router.push('/main')
     },
@@ -100,19 +92,17 @@ const loginModule: Module<LoginState, RootState> = {
       // 4. 跳转到登录页面
       router.push('/login')
     },
-    loadLocalLoginInfo({ commit }) {
+    async refreshTokenAction({ commit }) {
+      const refreshTokenResult = await refreshToken()
+      const { token } = refreshTokenResult.data
+      commit('changeToken', token)
+      localCache.setCache('token', token)
+    },
+    loadLocalLoginInfo({ dispatch, commit }) {
       const token = localCache.getCache('token')
       if (token) {
         commit('changeToken', token)
-
-        // 启动刷新token定时器
-        clearInterval(refreshTokenTimer)
-        refreshTokenTimer = setInterval(async () => {
-          const refreshTokenResult = await refreshToken()
-          const { token } = refreshTokenResult.data
-          commit('changeToken', token)
-          localCache.setCache('token', token)
-        }, 1000 * 60 * 25)
+        dispatch('refreshTokenAction')
       }
 
       const userInfo = localCache.getCache('userInfo')

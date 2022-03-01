@@ -40,8 +40,10 @@ class FancyRequest {
     this.instance.interceptors.response.use(
       (res) => {
         const data = res.data
-        if (data.code === 1111) {
+        if (data.code === 123) {
           store.dispatch('loginModule/accountLogoutAction')
+        } else if (data.code === 1111) {
+          store.dispatch('loginModule/refreshTokenAction')
         }
         return res.data
       },
