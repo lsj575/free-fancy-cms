@@ -23,8 +23,8 @@
                     v-for="option in item.options"
                     :key="option.name"
                     :value="option.value"
-                    >{{ option.name }}</el-option
-                  >
+                    :label="option.name"
+                  ></el-option>
                 </el-select>
               </template>
               <template v-if="item.type === 'datepicker'">

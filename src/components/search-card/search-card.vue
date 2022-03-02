@@ -3,7 +3,7 @@
     <fancy-form v-bind="searchFormConfig" :form-data="formData" @update-form-data="updateFormData">
       <template #footer>
         <div class="search-btn">
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="handleQuery">查询</el-button>
           <el-button @click="handleReset">重置</el-button>
         </div>
       </template>
@@ -24,7 +24,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['resetBtnClick', 'queryBtnClick'],
+  setup(props, { emit }) {
     const formItems = props.searchFormConfig.formItems ?? []
     const formOriginData = {}
     for (const item of formItems) {
@@ -42,12 +43,18 @@ export default defineComponent({
       for (const key in formOriginData) {
         formData[`${key}`] = ''
       }
+      emit('resetBtnClick')
+    }
+
+    const handleQuery = () => {
+      emit('queryBtnClick', formData)
     }
 
     return {
       formData,
       updateFormData,
-      handleReset
+      handleReset,
+      handleQuery
     }
   }
 })

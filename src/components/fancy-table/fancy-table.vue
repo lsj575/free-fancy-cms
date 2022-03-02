@@ -16,6 +16,7 @@
           :label="propItem.lable"
           :min-width="propItem.minWidth"
           align="center"
+          show-overflow-tooltip
         >
           <template #default="scope">
             <slot :name="propItem.slotName" :row="scope.row">
@@ -29,9 +30,9 @@
       <slot name="footer">
         <el-pagination
           small="true"
-          v-model:currentPage="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          v-model:currentPage="queryInfo.current"
+          :page-sizes="[10, 20, 30]"
+          :page-size="queryInfo.size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="dataCount"
           @size-change="handleSizeChange"
@@ -43,7 +44,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { useStore } from '@/store'
+import { computed, defineComponent, PropType } from 'vue'
 export default defineComponent({
   props: {
     title: {
@@ -60,7 +62,24 @@ export default defineComponent({
     },
     dataCount: {
       type: Number,
-      required: true
+      required: true,
+      default: 0
+    }
+  },
+  setup() {
+    const store = useStore()
+    const queryInfo = computed(() => store.state.systemModule.queryInfo)
+    const handleCurrentChange = (current: number) => {
+      store.commit('systemModule/changeQueryInfo', { ...queryInfo.value, current })
+    }
+
+    const handleSizeChange = (size: number) => {
+      store.commit('systemModule/changeQueryInfo', { ...queryInfo.value, size })
+    }
+    return {
+      handleSizeChange,
+      handleCurrentChange,
+      queryInfo
     }
   }
 })
