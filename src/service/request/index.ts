@@ -3,7 +3,7 @@ import type { AxiosInstance } from 'axios'
 import type { FancyRequestIntercepetors, FancyRequestConfig } from './type'
 import store from '@/store'
 
-import { ElLoading, ILoadingInstance } from 'element-plus'
+import { ElLoading, ILoadingInstance, ElMessage } from 'element-plus'
 
 class FancyRequest {
   instance: AxiosInstance
@@ -40,10 +40,12 @@ class FancyRequest {
     this.instance.interceptors.response.use(
       (res) => {
         const data = res.data
-        if (data.code === 123) {
+        if (data.code === 1209) {
           store.dispatch('loginModule/accountLogoutAction')
         } else if (data.code === 1111) {
           store.dispatch('loginModule/refreshTokenAction')
+        } else if (data.code !== 1000) {
+          ElMessage.error(data.msg)
         }
         return res.data
       },

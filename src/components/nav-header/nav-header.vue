@@ -9,7 +9,7 @@
           <span class="el-dropdown-link">{{ userInfo.username }}</span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item @click="handleLogoutClick">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -50,11 +50,16 @@ export default defineComponent({
       return mapPathToBreadcrumbs(userMenus, currentPath)
     })
 
+    const handleLogoutClick = () => {
+      store.dispatch('loginModule/accountLogoutAction')
+    }
+
     return {
       isFold,
       handleFoldMenu,
       userInfo,
-      breadcrumbs
+      breadcrumbs,
+      handleLogoutClick
     }
   }
 })

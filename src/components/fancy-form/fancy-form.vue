@@ -4,12 +4,20 @@
       <el-row>
         <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
-            <el-form-item :label="item.label" :style="itemStyle">
+            <el-form-item v-if="!item.isHidden" :label="item.label" :style="itemStyle">
               <template v-if="item.type === 'input'">
                 <el-input
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   v-model="formData[`${item.field}`]"
+                ></el-input>
+              </template>
+              <template v-if="item.type === 'password'">
+                <el-input
+                  :placeholder="item.placeholder"
+                  v-bind="item.otherOptions"
+                  v-model="formData[`${item.field}`]"
+                  show-password
                 ></el-input>
               </template>
               <template v-if="item.type === 'select'">

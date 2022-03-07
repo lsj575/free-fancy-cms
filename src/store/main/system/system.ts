@@ -1,9 +1,15 @@
 import { Module } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 import { SystemState, QueryInfoType } from './types'
 import { RootState } from '../../types'
 
-import { deletePageDataByID, getDataList } from '@/service/main/system/system'
+import {
+  createPageData,
+  deletePageDataByID,
+  editPageDataByID,
+  getDataList
+} from '@/service/main/system/system'
 import { upFirstChar } from '@/utils/tools'
 
 const pageListMap = {
@@ -68,6 +74,46 @@ const systemModule: Module<SystemState, RootState> = {
 
       // 调用删除的网络请求
       const dataRes = await deletePageDataByID(pageUrl)
+      if (dataRes.code === 1000) {
+        ElMessage({
+          message: '删除成功',
+          type: 'success'
+        })
+      }
+
+      // 请求最新的数据
+      dispatch('getDataList', {
+        pageName: pageName,
+        queryInfo: state.queryInfo
+      })
+    },
+    async createPageDataAction({ dispatch, state }, payload) {
+      const { pageName, newData } = payload
+      const url = `/sys/${pageName}`
+      const dataRes = await createPageData(url, newData)
+      if (dataRes.code === 1000) {
+        ElMessage({
+          message: '新增成功',
+          type: 'success'
+        })
+      }
+
+      // 请求最新的数据
+      dispatch('getDataList', {
+        pageName: pageName,
+        queryInfo: state.queryInfo
+      })
+    },
+    async editPageDataAction({ state, dispatch }, payload) {
+      const { pageName, editData } = payload
+      const url = `/sys/${pageName}`
+      const dataRes = await editPageDataByID(url, editData)
+      if (dataRes.code === 1000) {
+        ElMessage({
+          message: '编辑成功',
+          type: 'success'
+        })
+      }
 
       // 请求最新的数据
       dispatch('getDataList', {

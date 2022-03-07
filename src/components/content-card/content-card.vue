@@ -8,7 +8,7 @@
     >
       <!-- 1. header 中的插槽 -->
       <template #headerHandler>
-        <el-button v-if="isAdd" size="small" type="primary">{{
+        <el-button v-if="isAdd" size="small" type="primary" @click="handleNewClick">{{
           contentTableConfig.addBtnName
         }}</el-button>
       </template>
@@ -24,7 +24,14 @@
       </template>
       <template #heandler="scope">
         <div class="heandle-btns">
-          <el-button v-if="isUpdate" :icon="Edit" type="text" size="mini">编辑</el-button>
+          <el-button
+            v-if="isUpdate"
+            :icon="Edit"
+            type="text"
+            size="mini"
+            @click="handleUpdateClick(scope.row)"
+            >编辑</el-button
+          >
           <el-button
             v-if="isDelete"
             :icon="Delete"
@@ -33,6 +40,7 @@
             @click="handleDeleteClick(scope.row)"
             >删除</el-button
           >
+          <div v-if="!isUpdate && !isDelete">无操作权限</div>
         </div>
       </template>
     </fancy-table>
@@ -43,6 +51,7 @@ import { defineComponent, computed, watch } from 'vue'
 import { useStore } from '../../store'
 import fancyTable from '../fancy-table/fancy-table.vue'
 import { Edit, Delete } from '@element-plus/icons'
+import { ElMessageBox } from 'element-plus'
 
 import { usePermission } from '@/hooks/usePermission'
 
@@ -60,11 +69,12 @@ export default defineComponent({
   components: {
     fancyTable
   },
-  setup(props) {
+  emits: ['newBtnClick', 'editBtnClick'],
+  setup(props, { emit }) {
     const store = useStore()
     // 获取权限
     const isAdd = usePermission(props.pageName, 'add')
-    const isUpdate = usePermission(props.pageName, 'udpate')
+    const isUpdate = usePermission(props.pageName, 'update')
     const isDelete = usePermission(props.pageName, 'delete')
     const isQuery = usePermission(props.pageName, 'query')
 
@@ -75,7 +85,7 @@ export default defineComponent({
 
     const userTypeName = ['系统管理员', '测试员', '普通用户']
     const getPageData = (searchInfo: any = {}) => {
-      // if (!isQuery) return
+      if (!isQuery) return
       store.dispatch('systemModule/getDataList', {
         pageName: props.pageName,
         queryInfo: {
@@ -95,11 +105,22 @@ export default defineComponent({
 
     // 删除操作
     const handleDeleteClick = (rowData: any) => {
-      console.log(rowData)
+      ElMessageBox.confirm('是否确认删除该条数据?', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        emit('editBtnClick', rowData)
+      })
+      store.dispatch('systemModule/deletePageData', { id: rowData?.id, pageName: props.pageName })
     }
     // 编辑操作
-    const handleUpdateClick = () => {
-      console.log(1)
+    const handleUpdateClick = (rowData: any) => {
+      emit('editBtnClick', rowData)
+    }
+    // 新增操作
+    const handleNewClick = () => {
+      emit('newBtnClick')
     }
 
     return {
@@ -113,7 +134,8 @@ export default defineComponent({
       isDelete,
       isUpdate,
       handleDeleteClick,
-      handleUpdateClick
+      handleUpdateClick,
+      handleNewClick
     }
   }
 })

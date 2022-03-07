@@ -3,11 +3,11 @@ export interface QueryInfoType {
   sortColumns: string[]
   current: number
   size: number
-  timeColumn: string
-  start: string
-  end: string
-  status: number
-  value: string
+  timeColumn?: string
+  start?: string
+  end?: string
+  status?: number
+  value?: string
 }
 
 export interface SystemState {

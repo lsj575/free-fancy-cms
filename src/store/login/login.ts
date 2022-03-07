@@ -66,26 +66,27 @@ const loginModule: Module<LoginState, RootState> = {
           message: '登录成功',
           type: 'success'
         })
-      } else {
-        ElMessage.error(loginResult.msg)
       }
       const { user, Authorization } = loginResult.data
       commit('changeToken', Authorization)
       localCache.setCache('token', Authorization)
 
-      // 2. 获取用户信息
+      // 2. 初始化数据请求
+      dispatch('getInitialDataAction', null, { root: true })
+
+      // 3. 获取用户信息
       const userInfoResult = await requestUserInfoById(user.id)
       const userInfo = userInfoResult.data
       commit('changeUserInfo', userInfo)
       localCache.setCache('userInfo', userInfo)
 
-      // 3. 获取用户菜单
+      // 4. 获取用户菜单
       const userMenusResult = await requestUserMenusByUserId(user.id)
       const userMenus = userMenusResult.data
       commit('changeUserMenus', userMenus)
       localCache.setCache('userMenus', userMenus)
 
-      // 4. 设置刷新token的定时器
+      // 5. 设置刷新token的定时器
       if (refreshTokenTimer !== null) {
         clearInterval(refreshTokenTimer)
         refreshTokenTimer = null
@@ -140,6 +141,9 @@ const loginModule: Module<LoginState, RootState> = {
           dispatch('refreshTokenAction')
         }, 1000 * 60 * 25)
       }
+
+      // 初始化数据请求
+      dispatch('getInitialDataAction', null, { root: true })
 
       const userInfo = localCache.getCache('userInfo')
       if (userInfo) {

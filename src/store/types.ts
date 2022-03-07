@@ -2,7 +2,7 @@ import { LoginState } from './login/types'
 import { SystemState } from './main/system/types'
 
 export interface RootState {
-  username: string
+  entireRole: any[]
 }
 
 interface ModulesSate {

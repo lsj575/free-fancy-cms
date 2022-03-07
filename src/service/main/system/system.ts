@@ -12,3 +12,24 @@ export function getDataList(url: string, queryInfo: any) {
     }
   })
 }
+
+// url: users/:id
+export function deletePageDataByID(url: string) {
+  return fancyRequest.delete<FancyDataReponseType>({
+    url: url
+  })
+}
+
+export function createPageData(url: string, data: any) {
+  return fancyRequest.post<FancyDataReponseType>({
+    url: url,
+    data: data
+  })
+}
+
+export function editPageDataByID(url: string, data: any) {
+  return fancyRequest.put<FancyDataReponseType>({
+    url: url,
+    data: data
+  })
+}
